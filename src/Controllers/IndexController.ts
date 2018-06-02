@@ -5,6 +5,7 @@ class IndexController{
     public home(req:express.Request,resp:express.Response):void{
         resp.sendfile("/index.html");
     }
+    
 }
 
 export default new IndexController();
