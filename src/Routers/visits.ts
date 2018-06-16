@@ -3,9 +3,9 @@ import VisitController from "../Controllers/VisitController";
 
 let router = express.Router();
 
-router.get("/visit/plan", VisitController.AddVisit);
-router.post("/visit",VisitController.PlanVisit);
-router.get("/visit/{visit_id}",VisitController.GetVisit);
+router.get("/visits/plan", VisitController.AddVisit);
+router.post("/visits",VisitController.PlanVisit);
+router.get("/visits/:visit_id",VisitController.GetVisit);
 
 
 export default router;

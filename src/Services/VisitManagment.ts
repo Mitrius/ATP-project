@@ -25,11 +25,11 @@ class VisitManagment extends AbstractService {
         return nextVisit;
     }
     public async GetPatientVisits(patient: string): Promise<Array<Visit>> {
-        let visits = await this.db.collection("visits").find({ "patient": patient }).toArray();
-        return visits.map((record) => JSON.parse(record) as Visit)
+        let visits: Array<Visit> = await this.db.collection("visits").find({ "patient": patient }).toArray();
+        return visits;
     }
     public async GetVisit(id: string): Promise<Visit> {
-        let visit = await this.db.collection("visits").findOne({ "id": id }) as Visit;
+        let visit: Visit = await this.db.collection("visits").findOne({ "id": id });
         return visit;
     }
 }

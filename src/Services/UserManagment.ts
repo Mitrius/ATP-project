@@ -9,11 +9,7 @@ class UserManagment extends AbstractService {
     }
 
     public async AddUser(username: string, userPassword: string, roles: Array<string>): Promise<Boolean> {
-        let newUser = new User(username, userPassword);
-
-        roles.forEach((role) => {
-            newUser.addRole(role);
-        });
+        let newUser = new User(username, userPassword, roles);
 
         let result = await this.db.collection("users").insertOne(newUser).catch((err) => console.log(err));
         return result.insertedCount === 1;

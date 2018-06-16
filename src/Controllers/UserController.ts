@@ -9,16 +9,16 @@ class UserController {
         resp.status(200);
         resp.sendfile("/users.html");
     }
-    public async AddUser(req: express.Request, resp: express.Response): Promise<void> {
+    public async AddUser(req: express.Request, resp: express.Response){
         let reqData = req.body;
         let newUserData = req.body["newUser"];
 
-        let userData = await UserManagment.getUser(reqData["username"]);
+        let userData = await UserManagment.GetUser(reqData["username"]);
         if (!userData.roles.some((role) => role === "admin")) {
             resp.status(403);
         }
         else {
-            let result = await UserManagment.addUser(newUserData["login"], newUserData["password"], newUserData["roles"]).catch((err) => { console.log(err) });;
+            let result = await UserManagment.AddUser(newUserData["login"], newUserData["password"], newUserData["roles"]).catch((err) => { console.log(err) });;
             if (result)
                 resp.status(201);
             else
@@ -26,16 +26,16 @@ class UserController {
         }
         resp.send({});
     }
-    public async RemoveUser(req: express.Request, resp: express.Response): Promise<void> {
+    public async RemoveUser(req: express.Request, resp: express.Response){
         let reqData = req.body;
         let targetUsername = req.body["targetUser"];
 
-        let userData = await UserManagment.getUser(reqData["username"]);
+        let userData = await UserManagment.GetUser(reqData["username"]);
         if (!userData.roles.some((role) => role === "admin")) {
             resp.status(403);
         }
         else {
-            let result = await UserManagment.removeUser(targetUsername);
+            let result = await UserManagment.RemoveUser(targetUsername);
             resp.status(204);
         }
         resp.send({});
