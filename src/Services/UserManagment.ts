@@ -8,28 +8,31 @@ class UserManagment extends AbstractService {
         super();
     }
 
-    public async addUser(username: string, userPassword: string, roles: Array<string>): Promise<Boolean> {
+    public async AddUser(username: string, userPassword: string, roles: Array<string>): Promise<Boolean> {
         let newUser = new User(username, userPassword);
 
         roles.forEach((role) => {
             newUser.addRole(role);
         });
 
-        let result = await this.db.collection("users").insertOne(newUser).catch((err) => console.log(err) );
+        let result = await this.db.collection("users").insertOne(newUser).catch((err) => console.log(err));
         return result.insertedCount === 1;
     }
-    public async removeUser(username: string): Promise<Boolean> {
-        let result = await this.db.collection("users").deleteOne({ "username": username }).catch((err) => console.log(err) );;
+    public async RemoveUser(username: string): Promise<Boolean> {
+        let result = await this.db.collection("users").deleteOne({ "username": username }).catch((err) => console.log(err));;
         return result.deletedCount === 1;
     }
-    public async editUser(username: string, userPassword: string, roles: Array<string>): Promise<Boolean> {
-        let newUser = new User(username, userPassword);
+    public async EditUser(username: string, userPassword: string, roles: Array<string>, accessLevel: number): Promise<Boolean> {
+        let newUser = new User(username, userPassword, roles);
 
-        roles.forEach((role) => {
-            newUser.addRole(role);
-        });
-        let result = await this.db.collection("users").replaceOne({ "username": username }, newUser).catch((err) => console.log(err) );;
+        let result = await this.db.collection("users").replaceOne({ "username": username }, newUser).catch((err) => console.log(err));;
         return result.modifiedCount === 1;
+    }
+    public async GetUser(username: string): Promise<User> {
+        return await this.db.collection("users").findOne({ "username": username }) as User;
+    }
+    public async GetUsers(): Promise<Array<User>> {
+        return await this.db.collection("users").find({}).toArray();
     }
 
 }

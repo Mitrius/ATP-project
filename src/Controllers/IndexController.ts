@@ -2,7 +2,8 @@ import * as express from "express";
 import * as path from "path";
 
 class IndexController{
-    public home(req:express.Request,resp:express.Response):void{
+    public Home(req:express.Request,resp:express.Response):void{
+        resp.status(200);
         resp.sendfile("/index.html");
     }
     

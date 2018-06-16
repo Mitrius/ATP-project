@@ -1,8 +1,12 @@
 import * as express from "express";
-import VisitController from "../Controllers/UserController";
+import UserController from "../Controllers/UserController";
 
 let router = express.Router();
 
-router.post("/users",VisitController.addUser);
+router.get("/users", UserController.GetUsers);
+router.post("/users", UserController.AddUser);
+
+router.get("/users/:username", UserController.GetUser);
+router.delete("/users/:username", UserController.RemoveUser);
 
 export default router;

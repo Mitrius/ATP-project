@@ -3,6 +3,6 @@ import IndexController from "../Controllers/IndexController";
 
 let router = express.Router();
 
-router.get("/", IndexController.home);
+router.get("/", IndexController.Home);
 
 export default router;
