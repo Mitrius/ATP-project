@@ -6,6 +6,23 @@ import User from "../Models/User";
 import Doctor from "../Models/Doctor";
 
 class UserController {
+    public async AddDoctor(req: express.Request, resp: express.Response) {
+        let username = req.header("Username") as string;
+        let newUserData = req.body["newUser"];
+
+        let userData = await UserManagment.GetUser(username);
+        if (!userData.roles.some((role) => role === "admin")) {
+            resp.status(403);
+        }
+        else {
+            let result = await UserManagment.AddUser(newUserData["username"], newUserData["password"], newUserData["roles"]);
+            if (result)
+                resp.status(201);
+            else
+                resp.status(418)
+        }
+        resp.send({});
+    }
     public async GetUserView(req: express.Request, resp: express.Response) {
         resp.status(200);
         resp.sendfile("/users.html");
@@ -64,7 +81,13 @@ class UserController {
         }
     }
     public async GetPatients(req: express.Request, resp: express.Response) {
-        let users: Array<User> = await UserManagment.GetUsers();
+        let users = await UserManagment.GetPatients();
+        resp.send(users);
+        resp.status(200);
+    }
+    public async GetDoctors(req: express.Request, resp: express.Response) {
+        let users = await UserManagment.GetUsers();
+        users = users.filter((record) => record.roles.some((role) => role === "doctor"));
         resp.send(users);
         resp.status(200);
     }

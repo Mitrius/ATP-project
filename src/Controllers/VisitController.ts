@@ -13,12 +13,23 @@ class VisitController {
         resp.send(visit);
     }
     public async RemoveVisit(req: express.Request, resp: express.Response) {
+
+        let username = req.header("Username") as string;
+        let userData = await UserManagment.GetUser(username);
+        
         let visit_id = req.param("visit_id");
-        let status = await VisitManagment.CancelVisit(visit_id);
-        if (status)
-            resp.status(204);
-        else
-            resp.status(418);
+        let visit = await VisitManagment.GetVisit(visit_id);
+
+        if (!userData.roles.some((role) => (role === "admin" || (role === "patient" && username === visit.patient)))) {
+            resp.status(403);
+        } else {
+            let status = await VisitManagment.CancelVisit(visit_id);
+            if (status)
+                resp.status(204);
+            else
+                resp.status(418);
+        }
+
     }
     public async GetPatientVisits(req: express.Request, resp: express.Response) {
         let username = req.header("Username") as string;
