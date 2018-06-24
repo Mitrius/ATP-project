@@ -7,16 +7,25 @@ import Visit from "../Models/Visit";
 class VisitController {
     public async AddVisit(req: express.Request, resp: express.Response) {
         let reqData = req.body;
-        let visit = await VisitManagment.AddVisit(reqData["patient"], reqData["date"], reqData["doctor"], reqData["procedures"]);
+        let plannedDate = reqData["date"] as Date;
 
-        resp.status(201);
-        resp.send(visit);
+        let doctor_timetable = await VisitManagment.GetDoctorsVisit(reqData["doctor"]);
+        let dates = doctor_timetable.map((record) => record.date);
+        if (dates.some((date) => date === plannedDate)) {
+            resp.status(409);
+            resp.send({});
+        } else {
+            let visit = await VisitManagment.AddVisit(reqData["patient"], plannedDate, reqData["doctor"], reqData["procedures"]);
+
+            resp.status(201);
+            resp.send(visit);
+        }
     }
     public async RemoveVisit(req: express.Request, resp: express.Response) {
 
         let username = req.header("Username") as string;
         let userData = await UserManagment.GetUser(username);
-        
+
         let visit_id = req.param("visit_id");
         let visit = await VisitManagment.GetVisit(visit_id);
 
@@ -62,6 +71,14 @@ class VisitController {
             resp.status(200);
         }
 
+    }
+    public async GetDoctorTimetable(req: express.Request, resp: express.Response) {
+        let doctor = req.param("doctor");
+        let doctor_visits = await VisitManagment.GetDoctorsVisit(doctor);
+        let schedule = doctor_visits.map((record) => record.date);
+
+        resp.send(schedule);
+        resp.status(200);
     }
     public async GetVisit(req: express.Request, resp: express.Response) {
         let visit: Visit = await VisitManagment.GetVisit(req.param("visit_id"));
