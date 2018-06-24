@@ -8,10 +8,12 @@ class VisitController {
     public async AddVisit(req: express.Request, resp: express.Response) {
         let reqData = req.body;
         let plannedDate = reqData["date"] as Date;
+        let plannedEndDate = new Date(plannedDate.getTime());
+        plannedEndDate.setMinutes(plannedDate.getMinutes() + 30);
 
         let doctor_timetable = await VisitManagment.GetDoctorsVisit(reqData["doctor"]);
         let dates = doctor_timetable.map((record) => record.date);
-        if (dates.some((date) => date === plannedDate)) {
+        if (dates.some((date) => (date >= plannedDate) && (date <= plannedEndDate))) {
             resp.status(409);
             resp.send({});
         } else {
