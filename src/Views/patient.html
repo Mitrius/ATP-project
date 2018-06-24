@@ -24,6 +24,14 @@
                         <td><button id="delButton">Delete</button></td>
                         <td><button id="logButton">Logout</button></td>
                     </tr>
+                    <tr>
+                        <form id="doctorForm">
+                            <td>Doctor:</td>
+                            <td><input id="doctorName" type="text"/></td>
+                            <td><input type="submit" value="Get Timetable"/></td>
+                            <td><div id="timetable"></div></td>
+                        </form>
+                    </tr>
                     <form id="contentTable">
                         <div id="content"></div>
                     </form>
@@ -102,6 +110,23 @@
             });
 
             e.preventDefault();
+        });
+        $("#doctorForm").submit(function(){
+            $.ajax({ 
+                type: 'GET', 
+                url: '/visits/doctor/'+$('#doctorName').val()+'/timetable/', 
+                data: {  }, 
+                dataType: 'json',
+                success: function (data) { 
+                    $.each(data, function(index, element) {
+                        $('#timetable').append($('<p>', {text: element}));
+                    });
+                },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Username': sessionStorage.getItem("username")
+                }
+            });
         });
     </script>
 </body>
