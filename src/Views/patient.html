@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body style="background-color: #5f5f5f; height: 100%">
+    <div class="container-fluid" style="background-color: #ffffff; height: 100%">
+        <div style="height: 100%; min-height: 100%">
+            <div class="container" style="background-color: #b3b3b3">
+                <table>
+                    <tr>
+                        <form id="addVisitForm">
+                            <td><input id="newVisitDate" type="text"/></td>
+                            <td><input id="newVisitDoctor" type="text"/></td>
+                            <td><input id="newVisitProcedure" type="text"/></td>
+                            <td><input type="submit"/></td>
+                        </form>
+                        <td><button>Logout</button></td>
+                    </tr>
+                    <form id="contentTable">
+                        
+                    </form>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            $.ajax({ 
+                type: 'GET', 
+                url: '/visits/patient/'+sessionStorage.getItem("username"), 
+                data: {  }, 
+                dataType: 'json',
+                success: function (data) { 
+                    $.each(data, function(index, element) {
+                        var row = $('<tr>', {id: element._id});
+                        row.append('<input>', {type: "radio", name: "userDel", value: element._id});
+                        row.append($('<td>', {text: element.date}));
+                        row.append($('<td>', {text: element.patient}));
+                        $.each(element.roles, function(index2, element2) {
+                            row.append('<td>', {text: element2.type});
+                        });
+                        $('#contentTable').append(row);
+                    });
+                }
+            });
+        });
+        $("#contentTable").submit(function(){
+            var xhr;
+            xhr = new XMLHttpRequest();
+            xhr.open( 'DELETE', '/visits/'+$('input[name=userDel]:checked').val(), true );
+            document.getElementById($('input[name=userDel]:checked').val()).remove();
+            xhr.send( );
+            e.preventDefault();
+        });
+        $("#addUserForm").submit(function(){
+            var xhr, data;
+            data = {};
+            data["date"]=$("#newVisitDate").val();
+            data["doctor"]=$("#newVisitDoctor").val();
+            data["patient"]=sessionStorage.getItem("username");
+            data["procedures"]={  };
+            data["procedures"][0]=$("#newVisitProcedure").val();
+            xhr = new XMLHttpRequest();
+            xhr.open( 'POST', '/visits/', true );
+            xhr.send( data );
+            location.reload();
+            e.preventDefault();
+        });
+    </script>
+</body>
+</html>

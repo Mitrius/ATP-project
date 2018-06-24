@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body style="background-color: #5f5f5f; height: 100%">
+    <div class="container-fluid" style="background-color: #ffffff; height: 100%">
+        <div style="height: 100%; min-height: 100%">
+            <div class="container" style="background-color: #b3b3b3">
+                <table>
+                    <tr>
+                        <form id="addUserForm">
+                            <td><input id="newUserName" type="text" name="username"/></td>
+                            <td><input id="newUserPass" type="text" name="password"/></td>
+                            <td><input id="newUserRole" type="text" name="role"/></td>
+                            <td><input type="submit"/></td>
+                        </form>
+                        <td><button>Logout</button></td>
+                    </tr>
+                    <form id="contentTable">
+                        
+                    </form>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            $.ajax({ 
+                type: 'GET', 
+                url: '/users/', 
+                data: {  }, 
+                dataType: 'json',
+                success: function (data) { 
+                    $.each(data, function(index, element) {
+                        var row = $('<tr>', {id: element.username});
+                        row.append('<input>', {type: "radio", name: "userDel", value: element.username});
+                        row.append($('<td>', {text: element.username}));
+                        $.each(element.roles, function(index2, element2) {
+                            row.append('<td>', {text: element2});
+                        });
+                        $('#contentTable').append(row);
+                    });
+                }
+            });
+        });
+        $("#contentTable").submit(function(){
+            var xhr;
+            xhr = new XMLHttpRequest();
+            xhr.open( 'DELETE', '/users/'+$('input[name=userDel]:checked').val(), true );
+            document.getElementById($('input[name=userDel]:checked').val()).remove();
+            xhr.send( );
+            e.preventDefault();
+        });
+        $("#addUserForm").submit(function(){
+            var xhr, data;
+            data = {};
+            data["username"]=$("#newUserName").val();
+            data["password"]=$("#newUserPass").val();
+            data["roles"]={  };
+            data["roles"][0]=$("#newUserRole").val();
+            xhr = new XMLHttpRequest();
+            xhr.open( 'POST', '/users/', true );
+            document.getElementById($('input[name=userDel]:checked').val()).remove();
+            xhr.send( data );
+            location.reload();
+            e.preventDefault();
+        });
+    </script>
+</body>
+</html>
