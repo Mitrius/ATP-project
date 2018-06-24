@@ -7,7 +7,7 @@ import Visit from "../Models/Visit";
 class VisitController {
     public async AddVisit(req: express.Request, resp: express.Response) {
         let reqData = req.body;
-        let plannedDate = reqData["date"] as Date;
+        let plannedDate = new Date(reqData["date"]);
         let plannedEndDate = new Date(plannedDate.getTime());
         plannedEndDate.setMinutes(plannedDate.getMinutes() + 30);
 
