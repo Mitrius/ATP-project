@@ -15,15 +15,15 @@ class IndexController {
         let password = req.body["password"];
         let hash = sha3_512(password);
         let user = await UserManagment.GetUser(username);
-        if (hash === user.hash && user != null) {
+
+        if (user == null || user.hash !== hash)
+            resp.status(403);
+        else {
             resp.send(user);
             resp.status(200);
-        } else {
-            resp.status(403);
         }
 
     }
-
 }
 
 export default new IndexController();
