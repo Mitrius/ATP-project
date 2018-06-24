@@ -14,22 +14,19 @@ class VisitManagment extends AbstractService {
         return nextVisit;
     }
     public async CancelVisit(visit_id: string): Promise<Boolean> {
-        let result = await this.db.collection("visits").deleteOne({ 'key': visit_id });
+        let result = await this.db.collection("visits").deleteOne({ '_id': visit_id });
         return result.deletedCount === 1;
-    }
-    public async ReSchedule(visit_id: string, date: Date, doctor: string): Promise<Visit> {
-        let previousVisit = await this.db.collection("visits").findOne({ "key": visit_id });
-        let nextVisit = new Visit(date, doctor, previousVisit.patient, previousVisit.procedures);
-
-        this.db.collection("visits").replaceOne({ 'key': previousVisit.id }, nextVisit);
-        return nextVisit;
     }
     public async GetPatientVisits(patient: string): Promise<Array<Visit>> {
         let visits: Array<Visit> = await this.db.collection("visits").find({ "patient": patient }).toArray();
         return visits;
     }
+    public async GetDoctorsVisit(doctor: string): Promise<Array<Visit>> {
+        let visits: Array<Visit> = await this.db.collection("visits").find({ "doctor": doctor }).toArray();
+        return visits;
+    }
     public async GetVisit(id: string): Promise<Visit> {
-        let visit: Visit = await this.db.collection("visits").findOne({ "id": id });
+        let visit: Visit = await this.db.collection("visits").findOne({ "_id": id });
         return visit;
     }
 }

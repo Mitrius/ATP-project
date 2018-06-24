@@ -15,10 +15,10 @@ class UserManagment extends AbstractService {
         return result.insertedCount === 1;
     }
     public async RemoveUser(username: string): Promise<Boolean> {
-        let result = await this.db.collection("users").deleteOne({ "username": username }).catch((err) => console.log(err));;
+        let result = await this.db.collection("users").deleteOne({ "_id": username }).catch((err) => console.log(err));;
         return result.deletedCount === 1;
     }
-    public async EditUser(username: string, userPassword: string, roles: Array<string>, accessLevel: number): Promise<Boolean> {
+    public async EditUser(username: string, userPassword: string, roles: Array<string>): Promise<Boolean> {
         let newUser = new User(username, userPassword, roles);
 
         let result = await this.db.collection("users").replaceOne({ "username": username }, newUser).catch((err) => console.log(err));;

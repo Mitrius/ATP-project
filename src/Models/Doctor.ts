@@ -7,3 +7,4 @@ class Doctor extends User {
         this.specialities = specialities;
     }
 }
+export default Doctor;

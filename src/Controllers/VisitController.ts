@@ -1,12 +1,10 @@
 import * as express from "express";
 import * as path from "path";
+import UserManagment from "../Services/UserManagment";
 import VisitManagment from "../Services/VisitManagment";
 import Visit from "../Models/Visit";
 
 class VisitController {
-    public PlanVisit(req: express.Request, resp: express.Response): void {
-        resp.sendfile("/planVisit.html");
-    }
     public async AddVisit(req: express.Request, resp: express.Response) {
         let reqData = req.body;
         let visit: Visit = await VisitManagment.AddVisit(reqData["patient"], reqData["date"], reqData["doctor"], reqData["procedures"]);
@@ -22,18 +20,36 @@ class VisitController {
         else
             resp.status(418);
     }
-    public async EditVisit(req: express.Request, resp: express.Response) {
-        let reqData = req.body;
-        let status = await VisitManagment.ReSchedule(reqData["id"], reqData["date"], reqData["doctor"]);
-
-        resp.status(201);
-        resp.send(status)
-    }
     public async GetPatientVisits(req: express.Request, resp: express.Response) {
-        let visits = await VisitManagment.GetPatientVisits(req.body["patient"]);
+        let username = req.body["username"];
 
-        resp.send(visits);
-        resp.status(200);
+        let userData = await UserManagment.GetUser(username);
+
+        if (!userData.roles.some((role) => (role === "admin" || role === "patient"))) {
+            resp.status(403);
+        }
+        else {
+            let patient_id: string = req.param("patient_id");
+            let visits = await VisitManagment.GetPatientVisits(patient_id);
+
+            resp.send(visits);
+            resp.status(200);
+        }
+    }
+    public async GetDoctorsVisits(req: express.Request, resp: express.Response) {
+        let username = req.body["username"];
+
+        let userData = await UserManagment.GetUser(username);
+        if (!userData.roles.some((role) => (role === "admin" || role === "doctor"))) {
+            resp.status(403);
+        }
+        else {
+            let doctor_id: string = req.param("doctor_id");
+            let visits = await VisitManagment.GetDoctorsVisit(doctor_id);
+
+            resp.send(visits);
+            resp.status(200);
+        }
 
     }
     public async GetVisit(req: express.Request, resp: express.Response) {

@@ -4,6 +4,7 @@ import * as cors from "cors";
 import index from "./Routers/index";
 import visits from "./Routers/visits";
 import users from "./Routers/users";
+import procedures from "./Routers/procedures";
 
 class App {
     private mountRoutes(): void {
@@ -11,6 +12,7 @@ class App {
         router.use(index);
         router.use(visits);
         router.use(users);
+        router.use(procedures);
         this.express.use(router);
     }
 
