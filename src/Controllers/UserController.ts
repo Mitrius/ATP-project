@@ -11,10 +11,10 @@ class UserController {
         resp.sendfile("/users.html");
     }
     public async AddUser(req: express.Request, resp: express.Response) {
-        let reqData = req.body;
+        let username = req.header("Username") as string;
         let newUserData = req.body["newUser"];
 
-        let userData = await UserManagment.GetUser(reqData["username"]);
+        let userData = await UserManagment.GetUser(username);
         if (!userData.roles.some((role) => role === "admin")) {
             resp.status(403);
         }
@@ -28,10 +28,10 @@ class UserController {
         resp.send({});
     }
     public async RemoveUser(req: express.Request, resp: express.Response) {
-        let reqData = req.body;
         let targetUsername = req.body["targetUser"];
 
-        let userData = await UserManagment.GetUser(reqData["username"]);
+        let username = req.header("Username") as string;
+        let userData = await UserManagment.GetUser(username);
         if (!userData.roles.some((role) => role === "admin")) {
             resp.status(403);
         }
@@ -48,8 +48,10 @@ class UserController {
         resp.status(200);
     }
     public async GetUsers(req: express.Request, resp: express.Response) {
-        let reqData = req.body;
-        let userData = await UserManagment.GetUser(reqData["username"]);
+
+        let username = req.header("Username") as string;
+
+        let userData = await UserManagment.GetUser(username);
         if (!userData.roles.some((role) => role === "admin")) {
             resp.status(403);
         }

@@ -21,7 +21,7 @@ class VisitController {
             resp.status(418);
     }
     public async GetPatientVisits(req: express.Request, resp: express.Response) {
-        let username = req.body["username"];
+        let username = req.header("Username") as string;
 
         let userData = await UserManagment.GetUser(username);
 
@@ -37,7 +37,7 @@ class VisitController {
         }
     }
     public async GetDoctorsVisits(req: express.Request, resp: express.Response) {
-        let username = req.body["username"];
+        let username = req.header("Username") as string;
 
         let userData = await UserManagment.GetUser(username);
         if (!userData.roles.some((role) => (role === "admin" || role === "doctor"))) {
