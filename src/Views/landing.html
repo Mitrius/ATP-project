@@ -25,18 +25,22 @@
         $(document).ready(function() {
             $('#user_field').text(sessionStorage.getItem("username"));
             
-            var xhr;
-            xhr = new XMLHttpRequest();
-            
-            xhr.open( 'GET', '/users/'+data["username"], true );
-            xhr.onreadystatechange = function ( response ) {
-                $.each(response.roles, function(index, element) {
-                    if(element == "admin") $('#content_frame').attr('src', 'admin.html');
-                    else if(element == "doctor") $('#content_frame').attr('src', 'doctor.html');  
-                    else if(element == "patient") $('#content_frame').attr('src', 'patient.html');       
-                });
-            };
-            xhr.send();
+            $.ajax({ 
+                type: 'GET', 
+                url: '/users/'+sessionStorage.getItem("username"),
+                crossDomain: true,
+                dataType: 'json',
+                success: function (response) { 
+                    $.each(response.roles, function(index, element) {
+                        if(element == "admin") $('#content_frame').attr('src', 'admin.html');
+                        else if(element == "doctor") $('#content_frame').attr('src', 'doctor.html');  
+                        else if(element == "patient") $('#content_frame').attr('src', 'patient.html');       
+                    });
+                },
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
         });
     </script>
 </body>

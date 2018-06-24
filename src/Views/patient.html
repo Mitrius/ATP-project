@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <style>
+    td {padding: 10px;}
+    </style>
 </head>
 <body style="background-color: #5f5f5f; height: 100%">
     <div class="container-fluid" style="background-color: #ffffff; height: 100%">
@@ -18,10 +21,19 @@
                             <td><input id="newVisitProcedure" type="text"/></td>
                             <td><input type="submit"/></td>
                         </form>
-                        <td><button>Logout</button></td>
+                        <td><button id="delButton">Delete</button></td>
+                        <td><button id="logButton">Logout</button></td>
+                    </tr>
+                    <tr>
+                        <form id="doctorForm">
+                            <td>Doctor:</td>
+                            <td><input id="doctorName" type="text"/></td>
+                            <td><input type="submit" value="Get Timetable"/></td>
+                            <td><div id="timetable"></div></td>
+                        </form>
                     </tr>
                     <form id="contentTable">
-                        
+                        <div id="content"></div>
                     </form>
                 </table>
             </div>
@@ -37,38 +49,55 @@
                 success: function (data) { 
                     $.each(data, function(index, element) {
                         var row = $('<tr>', {id: element._id});
-                        row.append('<input>', {type: "radio", name: "userDel", value: element._id});
+                        row.append($('<input>', {type: "radio", name: "userDel", value: element._id}));
                         row.append($('<td>', {text: element.date}));
                         row.append($('<td>', {text: element.patient}));
                         $.each(element.roles, function(index2, element2) {
-                            row.append('<td>', {text: element2.type});
+                            row.append($('<td>', {text: element2.type}));
                         });
-                        $('#contentTable').append(row);
+                        $('#content').append(row);
                     });
+                },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Username': sessionStorage.getItem("username")
                 }
             });
         });
-        $("#contentTable").submit(function(){
-            var xhr;
-            xhr = new XMLHttpRequest();
-            xhr.open( 'DELETE', '/visits/'+$('input[name=userDel]:checked').val(), true );
-            document.getElementById($('input[name=userDel]:checked').val()).remove();
-            xhr.send( );
-            e.preventDefault();
+        $("#delButton").click(function(){
+            $.ajax({ 
+                type: 'DELETE', 
+                url: '/visits/'+$('input[name=userDel]:checked').val(), 
+                crossDomain: true,
+                success: function (data) { 
+                    location.reload();
+                },
+                fail: function (data) { 
+                    location.reload();
+                },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Username': sessionStorage.getItem("username")
+                }
+            });
         });
-        $("#addUserForm").submit(function(){
-            var xhr, data;
-            data = {};
-            data["date"]=$("#newVisitDate").val();
-            data["doctor"]=$("#newVisitDoctor").val();
-            data["patient"]=sessionStorage.getItem("username");
-            data["procedures"]={  };
-            data["procedures"][0]=$("#newVisitProcedure").val();
+        $("#logButton").click(function(){
+            sessionStorage.removeItem("username");
+            window.parent.location.replace('/index.html');
+        });
+        $("#addVisitForm").submit(function(){
+            var xdata;
+            xdata = {};
+            xdata["date"]=$("#newVisitDate").val();
+            xdata["doctor"]=$("#newVisitDoctor").val();
+            xdata["patient"]=sessionStorage.getItem("username");
+            xdata["procedures"]={  };
+            xdata["procedures"][0]=$("#newVisitProcedure").val();
 
             $.ajax({ 
                 type: 'POST', 
                 url: '/visits/', 
-                data: JSON.stringify(data), 
+                data: JSON.stringify(xdata), 
                 crossDomain: true,
                 dataType: 'json',
                 success: function (data) { 
@@ -81,6 +110,23 @@
             });
 
             e.preventDefault();
+        });
+        $("#doctorForm").submit(function(){
+            $.ajax({ 
+                type: 'GET', 
+                url: '/visits/doctor/'+$('#doctorName').val()+'/timetable/', 
+                data: {  }, 
+                dataType: 'json',
+                success: function (data) { 
+                    $.each(data, function(index, element) {
+                        $('#timetable').append($('<p>', {text: element}));
+                    });
+                },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Username': sessionStorage.getItem("username")
+                }
+            });
         });
     </script>
 </body>
