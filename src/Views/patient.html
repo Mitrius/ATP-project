@@ -64,10 +64,22 @@
             data["patient"]=sessionStorage.getItem("username");
             data["procedures"]={  };
             data["procedures"][0]=$("#newVisitProcedure").val();
-            xhr = new XMLHttpRequest();
-            xhr.open( 'POST', '/visits/', true );
-            xhr.send( data );
-            location.reload();
+
+            $.ajax({ 
+                type: 'POST', 
+                url: '/visits/', 
+                data: JSON.stringify(data), 
+                crossDomain: true,
+                dataType: 'json',
+                success: function (data) { 
+                    location.reload();
+                },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Username': sessionStorage.getItem("username")
+                }
+            });
+
             e.preventDefault();
         });
     </script>

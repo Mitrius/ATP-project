@@ -62,11 +62,22 @@
             data["password"]=$("#newUserPass").val();
             data["roles"]={  };
             data["roles"][0]=$("#newUserRole").val();
-            xhr = new XMLHttpRequest();
-            xhr.open( 'POST', '/users/', true );
-            document.getElementById($('input[name=userDel]:checked').val()).remove();
-            xhr.send( data );
-            location.reload();
+            
+            $.ajax({ 
+                type: 'POST', 
+                url: '/users/', 
+                data: JSON.stringify(data), 
+                crossDomain: true,
+                dataType: 'json',
+                success: function (data) { 
+                    location.reload();
+                },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Username': sessionStorage.getItem("username")
+                }
+            });
+            
             e.preventDefault();
         });
     </script>

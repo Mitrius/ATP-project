@@ -27,22 +27,30 @@
     </div>
     <script>
         $( 'form' ).submit(function ( e ) {
-            var data, xhr;
+            var xdata, xhr;
 
-            data = {};
-            data["username"]=$('#username_field').val();
-            data["password"]=$('#password_field').val();
+            xdata = {};
+            xdata["username"]=$('#username_field').val();
+            xdata["password"]=$('#password_field').val();
             
-            sessionStorage.setItem("username", data["username"]);
-            xhr = new XMLHttpRequest();
+            sessionStorage.setItem("username", xdata["username"]);
             
-            xhr.open( 'POST', '/login/'+data["username"], true );
-            xhr.onreadystatechange = function ( response ) {
-                if(xhr.status == 200) window.location.replace('/landing.html');
-                else  $('#username_field').css('background-color', 'red');
-            };
-            xhr.send( data );
-
+            $.ajax({ 
+                type: 'POST', 
+                url: '/login/', 
+                data: JSON.stringify(xdata), 
+                crossDomain: true,
+                dataType: 'json',
+                success: function (data) { 
+                    window.location.replace('/landing.html');
+                },
+                fail: function (data) { 
+                    $('#username_field').css('background-color', 'red');
+                },
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
             e.preventDefault();
         });
     </script>
