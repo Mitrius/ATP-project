@@ -7,14 +7,14 @@ import Visit from "../Models/Visit";
 class VisitController {
     public async AddVisit(req: express.Request, resp: express.Response) {
         let reqData = req.body;
-        let visit: Visit = await VisitManagment.AddVisit(reqData["patient"], reqData["date"], reqData["doctor"], reqData["procedures"]);
+        let visit = await VisitManagment.AddVisit(reqData["patient"], reqData["date"], reqData["doctor"], reqData["procedures"]);
 
         resp.status(201);
         resp.send(visit);
     }
     public async RemoveVisit(req: express.Request, resp: express.Response) {
-        let reqData = req.body;
-        let status = await VisitManagment.CancelVisit(reqData["id"]);
+        let visit_id = req.param("visit_id");
+        let status = await VisitManagment.CancelVisit(visit_id);
         if (status)
             resp.status(204);
         else
@@ -53,7 +53,7 @@ class VisitController {
 
     }
     public async GetVisit(req: express.Request, resp: express.Response) {
-        let visit: Visit = await VisitManagment.GetVisit(req.body["id"]);
+        let visit: Visit = await VisitManagment.GetVisit(req.param("visit_id"));
 
         resp.send(visit);
         resp.status(200);

@@ -28,7 +28,7 @@ class UserController {
         resp.send({});
     }
     public async RemoveUser(req: express.Request, resp: express.Response) {
-        let targetUsername = req.body["targetUser"];
+        let targetUsername = req.param("username");
 
         let username = req.header("Username") as string;
         let userData = await UserManagment.GetUser(username);
@@ -42,7 +42,8 @@ class UserController {
         resp.send({});
     }
     public async GetUser(req: express.Request, resp: express.Response) {
-        let result: User = await UserManagment.GetUser(req.params["username"]);
+        let targetUser = req.param("username");
+        let result: User = await UserManagment.GetUser(targetUser);
 
         resp.send(result);
         resp.status(200);
