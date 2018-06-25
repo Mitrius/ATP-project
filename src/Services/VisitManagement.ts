@@ -2,7 +2,7 @@ import Visit from "../Models/Visit";
 import Procedure from "../Models/Procedure";
 import AbstractService from "./AbstractService";
 
-class VisitManagment extends AbstractService {
+class VisitManagement extends AbstractService {
 
     constructor() {
         super();
@@ -30,4 +30,4 @@ class VisitManagment extends AbstractService {
         return visit;
     }
 }
-export default new VisitManagment();
+export default new VisitManagement();

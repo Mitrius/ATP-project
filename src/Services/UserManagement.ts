@@ -3,7 +3,7 @@ import User from "../Models/User";
 import AbstractService from "./AbstractService";
 import Doctor from "../Models/Doctor";
 
-class UserManagment extends AbstractService {
+class UserManagement extends AbstractService {
 
     constructor() {
         super();
@@ -50,4 +50,4 @@ class UserManagment extends AbstractService {
 
 
 }
-export default new UserManagment()
+export default new UserManagement()

@@ -2,7 +2,7 @@ import procedure from "../Models/Procedure";
 import AbstractService from "./AbstractService";
 import Procedure from "../Models/Procedure";
 
-class ProceduresManagment extends AbstractService {
+class ProceduresManagement extends AbstractService {
     constructor() {
         super();
     }
@@ -17,4 +17,4 @@ class ProceduresManagment extends AbstractService {
         return await this.db.collection("procedures").findOne({ "type": procedure_name }) as Procedure;
     }
 }
-export default new ProceduresManagment();
+export default new ProceduresManagement();

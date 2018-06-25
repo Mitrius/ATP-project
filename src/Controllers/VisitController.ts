@@ -1,7 +1,7 @@
 import * as express from "express";
 import * as path from "path";
-import UserManagment from "../Services/UserManagment";
-import VisitManagment from "../Services/VisitManagment";
+import UserManagment from "../Services/UserManagement";
+import VisitManagment from "../Services/VisitManagement";
 import Visit from "../Models/Visit";
 
 class VisitController {

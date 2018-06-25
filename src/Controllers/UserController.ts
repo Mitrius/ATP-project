@@ -1,7 +1,7 @@
 import * as express from "express";
 import * as path from "path";
 
-import UserManagment from "../Services/UserManagment";
+import UserManagment from "../Services/UserManagement";
 import User from "../Models/User";
 import Doctor from "../Models/Doctor";
 
@@ -11,7 +11,7 @@ class UserController {
         let newUserData = req.body["newUser"];
 
         let userData = await UserManagment.GetUser(username);
-        if (!userData.roles.some((role) => role === "admin")) {
+        if (!userData.roles.some((role: string) => role === "admin")) {
             resp.status(403);
         }
         else {
@@ -32,7 +32,7 @@ class UserController {
         let newUserData = req.body["newUser"];
 
         let userData = await UserManagment.GetUser(username);
-        if (!userData.roles.some((role) => role === "admin")) {
+        if (!userData.roles.some((role: string) => role === "admin")) {
             resp.status(403);
         }
         else {

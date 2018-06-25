@@ -1,6 +1,6 @@
 import * as express from "express";
 import * as path from "path";
-import ProceduresManagment from "../Services/ProceduresManagment";
+import ProceduresManagment from "../Services/ProceduresManagement";
 
 class ProcedureController {
     async GetProcedures(req: express.Request, resp: express.Response) {

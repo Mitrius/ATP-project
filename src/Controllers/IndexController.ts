@@ -2,7 +2,7 @@ import * as express from "express";
 import * as path from "path";
 import { sha3_512 } from 'js-sha3';
 
-import UserManagment from "../Services/UserManagment";
+import UserManagment from "../Services/UserManagement";
 import User from "../Models/User";
 
 class IndexController {
