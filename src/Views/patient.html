@@ -4,7 +4,10 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"/>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <style>
     td {padding: 10px;}
     </style>
@@ -41,7 +44,8 @@
     </div>
     <script>
         $(document).ready(function() {
-            $.ajax({ 
+            $( "#newVisitDate" ).datepicker();
+            $.ajax({
                 type: 'GET', 
                 url: '/visits/patient/'+sessionStorage.getItem("username"), 
                 data: {  }, 
@@ -52,6 +56,7 @@
                         row.append($('<input>', {type: "radio", name: "userDel", value: element._id}));
                         row.append($('<td>', {text: element.date}));
                         row.append($('<td>', {text: element.patient}));
+                        row.append($('<td>', {text: element.doctor}));
                         $.each(element.roles, function(index2, element2) {
                             row.append($('<td>', {text: element2.type}));
                         });
@@ -88,7 +93,7 @@
         $("#addVisitForm").submit(function(){
             var xdata;
             xdata = {};
-            xdata["date"]=$("#newVisitDate").val();
+            xdata["date"]=new Date($("#newVisitDate").val());
             xdata["doctor"]=$("#newVisitDoctor").val();
             xdata["patient"]=sessionStorage.getItem("username");
             xdata["procedures"]={  };
@@ -111,7 +116,7 @@
 
             e.preventDefault();
         });
-        $("#doctorForm").submit(function(){
+        $("#doctorForm").submit(function(e){
             $.ajax({ 
                 type: 'GET', 
                 url: '/visits/doctor/'+$('#doctorName').val()+'/timetable/', 
@@ -127,6 +132,7 @@
                     'Username': sessionStorage.getItem("username")
                 }
             });
+            e.preventDefault();
         });
     </script>
 </body>

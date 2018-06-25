@@ -7,7 +7,7 @@ import Visit from "../Models/Visit";
 class VisitController {
     public async AddVisit(req: express.Request, resp: express.Response) {
         let reqData = req.body;
-        let plannedDate = reqData["date"] as Date;
+        let plannedDate = new Date(reqData["date"]);
         let plannedEndDate = new Date(plannedDate.getTime());
         plannedEndDate.setMinutes(plannedDate.getMinutes() + 30);
 
@@ -75,7 +75,7 @@ class VisitController {
 
     }
     public async GetDoctorTimetable(req: express.Request, resp: express.Response) {
-        let doctor = req.param("doctor");
+        let doctor = req.param("doctor_id");
         let doctor_visits = await VisitManagment.GetDoctorsVisit(doctor);
         let schedule = doctor_visits.map((record) => record.date);
 
